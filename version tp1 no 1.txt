@@ -1,0 +1,226 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author Hamza
+ */
+import java.util.*;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import net.sf.json.JSONSerializer;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
+
+public class Main {
+
+    /**
+     * @param args the command line arguments
+     */
+    public static List<Integer> projetMinutes(JSONObject obJson, String unJour, String travail) throws Exception {
+        JSONArray jours = (JSONArray) JSONSerializer.toJSON(obJson.get(unJour));
+        List<Integer> perTravail = new ArrayList<Integer>();
+
+        int proMin = 0;
+        for (int i = 0; i < jours.size(); i++) {
+            JSONObject obJour = jours.getJSONObject(i);
+            try {
+                proMin = Integer.parseInt(obJour.getString(travail));
+            } catch (EmptyStackException e) {
+                System.out.println("Erreur");
+            }
+            perTravail.add(proMin);
+        }
+        return perTravail;
+    }
+
+    public static String verifierTypeEmploye(JSONObject employe) throws Exception {
+        String typeEmploye = "";
+        String snoEmploye = employe.getString("numero_employe");
+        int noEmploye = Integer.parseInt(snoEmploye);
+        if (noEmploye >= 1000) {
+            typeEmploye = "employé normale";
+        } else {
+            typeEmploye = "employé de l'administration";
+        }
+        return typeEmploye;
+    }
+
+    public static int teleTravail(JSONObject employe) throws Exception {
+
+        List<Integer> projets = new ArrayList<Integer>();
+        List<Integer> munites = new ArrayList<Integer>();
+        int sommeMinutes = 0;
+        String[] lesJours = {"jour1", "jour2", "jour3", "jour4", "jour5", "weekend1", "weekend2"};
+        for (int i = 0; i < lesJours.length; i++) {
+            projetMinutes(employe, lesJours[i], "projet");
+            projets = projetMinutes(employe, lesJours[i], "projet");
+            munites = projetMinutes(employe, lesJours[i], "minutes");
+            for (int j = 0; j < projets.size(); j++) {
+                if (projets.get(j) > 900) {
+                    sommeMinutes += munites.get(j);
+                }
+            }
+        }
+
+
+        return sommeMinutes;
+    }
+
+    public static int totalMinutesTravail(JSONObject employe) throws Exception {
+
+
+
+        List<Integer> munites = new ArrayList<Integer>();
+        int sommeMinutes = 0;
+        String[] lesJours = {"jour1", "jour2", "jour3", "jour4", "jour5", "weekend1", "weekend2"};
+        for (int i = 0; i < lesJours.length; i++) {
+
+
+            munites = projetMinutes(employe, lesJours[i], "minutes");
+            for (int j = 0; j < munites.size(); j++) {
+
+                sommeMinutes += munites.get(j);
+
+            }
+        }
+
+        return sommeMinutes;
+
+    }
+
+    public static void verifierLeNombreHeuresMinimal(JSONObject employe) throws Exception {
+        final int MIN_NORMALE = 38;
+        final int MIN_ADMINS = 36;
+
+        String typeEmploye = verifierTypeEmploye(employe);
+        int sommeMin = totalMinutesTravail(employe) - teleTravail(employe);
+        if (typeEmploye.compareTo("employé normale") == 0
+                && sommeMin < (MIN_NORMALE * 60)
+                || typeEmploye.compareTo("employé de l'administration") == 0
+                && sommeMin < (MIN_ADMINS * 60)) {
+            System.out.println("L'employé n'a pas travaillé le nombre d'heures minimal.");
+        }
+    }
+
+    public static void verifierLeNombreHeuresMaximal(JSONObject employe) throws Exception {
+        final int MAX = 43;
+        int sommeMin = totalMinutesTravail(employe) - teleTravail(employe);
+        if (sommeMin > MAX * 60) {
+            System.out.println("L'employé a depassé le nombre d'heures maximal");
+        }
+
+    }
+
+    public static void verifierLeNombreHeuresTeleTravailMax(JSONObject employe) throws Exception {
+        final int MAX = 10;
+        int sommeMin = teleTravail(employe);
+        String typeEmp = verifierTypeEmploye(employe);
+        if (typeEmp.compareTo("employé de l'administration") == 0
+                && sommeMin > MAX * 60) {
+            System.out.println("L'employé a depassé nombre d'heures maximal pour télétravail");
+        }
+    }
+
+    public static void verifierLeNombreHeuresMinmalParJourNorm(JSONObject employe) throws Exception {
+        int sommeMinQuo = 0;
+        final int MIN = 6;
+        String[] lesJours = {"jour1", "jour2", "jour3", "jour4", "jour5"};
+        String typeEmp = verifierTypeEmploye(employe);
+        if (typeEmp.compareTo("employé normale") == 0) {
+            for (int i = 0; i < lesJours.length; i++) {
+                List<Integer> nombreMin = projetMinutes(employe, lesJours[i], "minutes");
+                List<Integer> codeProjet = projetMinutes(employe, lesJours[i], "projet");
+                for (int j = 0; j < nombreMin.size(); j++) {
+                    if (codeProjet.get(j) <= 900) {
+                        sommeMinQuo += nombreMin.get(j);
+                    }
+                }
+                if (sommeMinQuo < MIN * 60) {
+                    System.out.println("L'employé n'a pas travaillé le nombre d'heurs minimale pour le jour  "
+                            + lesJours[i] + "," + sommeMinQuo);
+                }
+                sommeMinQuo = 0;
+            }
+        }
+    }
+
+    public static void verifierLeNombreHeuresMinmalParJourAdmin(JSONObject employe) throws Exception {
+
+        int sommeMinQuo = 0;
+        final int MIN = 4;
+        String[] lesJours = {"jour1", "jour2", "jour3", "jour4", "jour5"};
+        String typeEmp = verifierTypeEmploye(employe);
+        if (typeEmp.compareTo("employé de l'administration") == 0) {
+            for (int i = 0; i < lesJours.length; i++) {
+                List<Integer> nombreMin = projetMinutes(employe, lesJours[i], "minutes");
+                List<Integer> codeProjet = projetMinutes(employe, lesJours[i], "projet");
+                for (int j = 0; j < nombreMin.size(); j++) {
+                    if (codeProjet.get(j) <= 900) {
+                        sommeMinQuo += nombreMin.get(j);
+                    }
+                }
+                if (sommeMinQuo < MIN * 60) {
+                    System.out.println("L'employé n'a pas travaillé le nombre d'heurs minimale pour le jour  "
+                            + lesJours[i] + "," + sommeMinQuo);
+                }
+                sommeMinQuo = 0;
+            }
+        }
+
+
+    }
+    
+    
+    
+    
+    
+    public static void ecrireFichierJason() {
+		String cheminDuFichier 
+                   = "src/exemple.json";
+		
+		String contenuJson =
+                        "\"developers\":[{\"firstName\": \"Hack\",\"lastName\": \"Track\"},{\"firstName\": \"ad\",\"lastName\": \"il\"}]";
+		File unFichier = new File(cheminDuFichier);
+
+		try {
+			if (!unFichier.exists()){
+				unFichier.createNewFile();}
+			FileWriter ecriture = new FileWriter(unFichier);
+			ecriture.write(contenuJson);
+			ecriture.flush();
+			ecriture.close();
+		} catch (IOException e) {
+			System.out.println("Erreur: impossible de créer le fichier '"
+					+ cheminDuFichier + "'");
+		}
+	}
+    
+    
+
+    public static void main(String[] args) throws Exception {
+
+        String textJson = LireUnFichier.chargerUnFichier("src/inputfile.json");
+        JSONObject employe1 = (JSONObject) JSONSerializer.toJSON(textJson);
+
+
+        // verifierLeNombreHeuresTeleTravailMax(employe1);
+        //verifierLeNombreHeuresMinmalParJourAdmin(employe1);
+        ecrireFichierJason();
+        /* 
+         List<Integer> projet = projetMinutes(employe1, "jour1", "minutes");
+         for (int i = 0; i < projet.size(); i++) {
+         System.out.println(projet.get(i));
+         }
+         String snoEmploye= employe1.getString("numero_employe");
+         int noEmploye=Integer.parseInt(snoEmploye);
+         System.out.println(noEmploye);
+         */
+
+    }
+
+}

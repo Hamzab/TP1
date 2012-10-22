@@ -1,0 +1,60 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author Hamza
+ */
+import java.util.*;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import net.sf.json.JSONSerializer;
+
+public class Main {
+
+    /**
+     * @param args the command line arguments
+     */
+    public static List<Integer> projetMinutes(JSONObject obJson, String unJour, String travail) throws Exception {
+        JSONArray jours = (JSONArray) JSONSerializer.toJSON(obJson.get(unJour));
+        List<Integer> perTravail = new ArrayList<Integer>();
+
+        int proMun = 0;
+        for (int i = 0; i < jours.size(); i++) {
+            JSONObject obJour = jours.getJSONObject(i);
+            proMun = Integer.parseInt(obJour.getString(travail));
+            perTravail.add(proMun);
+        }
+        return perTravail;
+    }
+    public static void verifier(){
+        
+        
+        
+    }
+    
+    public static void main(String[] args) throws Exception {
+      
+        String textJson = LireUnFichier.chargerUnFichier("src/inputfile.json");
+        //JSONObject employe1 = (JSONObject) JSONSerializer.toJSON(textJson);
+        JSONArray emp=(JSONArray)JSONSerializer.toJSON(textJson) ;
+        int cont=emp.size();
+        
+        for(int i=0;i<cont;i++){
+            JSONObject ob1=(JSONObject)JSONSerializer.toJSON(emp.get(i));
+           System.out.println(ob1);
+        }
+        
+        /*
+        List<Integer> projet = projetMinutes(employe1, "jour1", "minutes");
+        for (int i = 0; i < projet.size(); i++) {
+            System.out.println(projet.get(i));
+        }
+       String snoEmploye= employe1.getString("numero_employe");
+       int noEmploye=Integer.parseInt(snoEmploye);
+       System.out.println(noEmploye);
+       */
+    }
+}
