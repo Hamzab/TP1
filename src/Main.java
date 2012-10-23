@@ -238,7 +238,7 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
-        String textJson = LireUnFichier.chargerUnFichier("src/inputfile.json");
+        String textJson = FileReader.loadFileIntoString("src/inputfile.json");
         JSONObject unEmploye = (JSONObject) JSONSerializer.toJSON(textJson);
         ecrireFichierJson(unEmploye);
 
