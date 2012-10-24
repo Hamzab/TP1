@@ -15,7 +15,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class Main {
+public class TimeSheet {
 
     /**
      * @param args the command line arguments
