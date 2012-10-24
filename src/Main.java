@@ -36,7 +36,6 @@ public class TimeSheet {
         }
         return perTravail;
     }
-
     public static String verifierTypeEmploye(JSONObject employe) throws Exception {
         String typeEmploye = "";
         String snoEmploye = employe.getString("numero_employe");
@@ -65,31 +64,20 @@ public class TimeSheet {
                 }
             }
         }
-
-
-        return sommeMinutes;
+         return sommeMinutes;
     }
 
     public static int totalMinutesTravail(JSONObject employe) throws Exception {
-
-
-
         List<Integer> munites = new ArrayList<Integer>();
         int sommeMinutes = 0;
         String[] lesJours = {"jour1", "jour2", "jour3", "jour4", "jour5", "weekend1", "weekend2"};
         for (int i = 0; i < lesJours.length; i++) {
-
-
             munites = projetMinutes(employe, lesJours[i], "minutes");
             for (int j = 0; j < munites.size(); j++) {
-
                 sommeMinutes += munites.get(j);
-
             }
         }
-
         return sommeMinutes;
-
     }
 
     public static boolean verifierLeNombreHeuresMinimal(JSONObject employe) throws Exception {
@@ -102,9 +90,8 @@ public class TimeSheet {
                 && sommeMin < (MIN_NORMALE * 60)
                 || typeEmploye.compareTo("employé de l'administration") == 0
                 && sommeMin < (MIN_ADMINS * 60)) {
-
             verifier = false;
-        }
+         }
         return verifier;
     }
 
@@ -113,7 +100,6 @@ public class TimeSheet {
         boolean verifier = true;
         int sommeMin = totalMinutesTravail(employe) - teleTravail(employe);
         if (sommeMin > MAX * 60) {
-
             verifier = false;
         }
         return verifier;
@@ -126,7 +112,6 @@ public class TimeSheet {
         String typeEmp = verifierTypeEmploye(employe);
         if (typeEmp.compareTo("employé de l'administration") == 0
                 && sommeMin > MAX * 60) {
-
             verifier = false;
         }
         return verifier;
@@ -148,7 +133,6 @@ public class TimeSheet {
                     }
                 }
                 if (sommeMinQuo < MIN * 60) {
-
                     verifier = false;
                 }
                 sommeMinQuo = 0;
@@ -158,7 +142,6 @@ public class TimeSheet {
     }
 
     public static boolean verifierLeNombreHeuresMinmalParJourAdmin(JSONObject employe) throws Exception {
-
         int sommeMinQuo = 0;
         final int MIN = 4;
         boolean verifier = true;
@@ -174,16 +157,13 @@ public class TimeSheet {
                     }
                 }
                 if (sommeMinQuo < MIN * 60) {
-
                     verifier = false;
                 }
                 sommeMinQuo = 0;
             }
         }
         return verifier;
-
     }
-
     public static String resultatDeVerification(JSONObject employe) throws Exception {
         String lesRemarques = "";  
         String resultat = "[";
@@ -237,11 +217,8 @@ public class TimeSheet {
     }
 
     public static void main(String[] args) throws Exception {
-
         String textJson = FileReader.loadFileIntoString("src/inputfile.json");
         JSONObject unEmploye = (JSONObject) JSONSerializer.toJSON(textJson);
         ecrireFichierJson(unEmploye);
-
-
     }
 }
