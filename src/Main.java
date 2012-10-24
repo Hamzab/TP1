@@ -22,7 +22,8 @@ public class TimeSheet {
     /**
      * Méthode qui permetra par ailleur de calculer les minutes travaillés ou les projets travaillé par jours
      */
-    public static List<Integer> projetMinutes(JSONObject obJson, String unJour, String travail) throws Exception {
+   
+   public static List<Integer> projetMinutes(JSONObject obJson, String unJour, String travail) throws Exception {
         JSONArray jours = (JSONArray) JSONSerializer.toJSON(obJson.get(unJour));
         List<Integer> perTravail = new ArrayList<Integer>();
 
@@ -156,8 +157,8 @@ public class TimeSheet {
     }
 
     /**
-     * Méthode qui permet de determiner si l'employé normal a travaillé le nombre d'heur minimal qu'il doit faire 
-     * en bureau, par jour 
+     * Méthode qui permet de determiner si l'employé normal a travaillé le nombre d'heur minimal qu'il doit 
+     * faire en bureau, par jour 
      * Elle retourne un boolean 
      */
 
@@ -186,7 +187,8 @@ public class TimeSheet {
     }
 
     /**
-     * Méthode qui permet de determiner si l'employé de l'administration a travaillé le nombre d'heur minimal qu'il doit 
+     * Méthode qui permet de determiner si l'employé de l'administration a travaillé le nombre 
+     * d'heur minimal qu'il doit 
      * faire  en bureau, par jour 
      * Elle retourne un boolean 
      */
