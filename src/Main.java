@@ -240,7 +240,8 @@ public class TimeSheet {
         }
         
         
-        for (int i = 0; i < lesRemarques.length() - 1; i++) {
+        //Une boucle pour valider le fichier json (placer la vergule)
+         for (int i = 0; i < lesRemarques.length() - 1; i++) {
             resultat += lesRemarques.charAt(i);
             if (lesRemarques.charAt(i + 1) == '\n' && i != lesRemarques.length() - 2) {
                 resultat += ",";
