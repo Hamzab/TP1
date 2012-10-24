@@ -1,6 +1,8 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * La classe vise a gerer le temps travaillé d'un employé selon son type, sa nature de travail et les projets
+ * La classe prend les données d'un fichier les données d'un fichier Json et remet les resultats dans un autre fichier
+ * du meme type. 
+ * 
  */
 
 /**
@@ -18,7 +20,7 @@ import java.io.IOException;
 public class TimeSheet {
 
     /**
-     * @param args the command line arguments
+     * Méthode qui permetra par ailleur de calculer les minutes travaillés ou les projets travaillé par jours
      */
     public static List<Integer> projetMinutes(JSONObject obJson, String unJour, String travail) throws Exception {
         JSONArray jours = (JSONArray) JSONSerializer.toJSON(obJson.get(unJour));
@@ -36,6 +38,13 @@ public class TimeSheet {
         }
         return perTravail;
     }
+
+     /**
+     * Méthode qui permetra de determiner le type d'employé(normal ou administratif)
+     * La méthode prend en parametre l'employé, en deduit son numéro et en conclu son type
+     * Elle retourne le type d'employé en string
+     */
+
     public static String verifierTypeEmploye(JSONObject employe) throws Exception {
         String typeEmploye = "";
         String snoEmploye = employe.getString("numero_employe");
@@ -47,6 +56,11 @@ public class TimeSheet {
         }
         return typeEmploye;
     }
+
+     /**
+     * Méthode qui permetra de determiner si le temps en télétravail de l'emploé
+     * Elle retourne le nombre de minute de teletravail
+     */
 
     public static int teleTravail(JSONObject employe) throws Exception {
 
@@ -67,6 +81,11 @@ public class TimeSheet {
          return sommeMinutes;
     }
 
+     /**
+     * Méthode qui permet de calculer le temps travailé en minute d'un employé par semaine
+     * 
+     */
+
     public static int totalMinutesTravail(JSONObject employe) throws Exception {
         List<Integer> munites = new ArrayList<Integer>();
         int sommeMinutes = 0;
@@ -79,6 +98,12 @@ public class TimeSheet {
         }
         return sommeMinutes;
     }
+
+     /**
+     * Méthode qui permet de determiner si l'employé a travaillé le nombre de minute minimal qu'il doit faire 
+     * en bureau, selon son type
+     * Elle retourne un boolean 
+     */
 
     public static boolean verifierLeNombreHeuresMinimal(JSONObject employe) throws Exception {
         final int MIN_NORMALE = 38;
@@ -95,6 +120,13 @@ public class TimeSheet {
         return verifier;
     }
 
+    /**
+     * Méthode qui permet de s'assurer si l'employé n'a pas depassé le nombre de minute max 
+     * en bureau, 
+     * Elle retourne un boolean 
+     */
+
+
     public static boolean verifierLeNombreHeuresMaximal(JSONObject employe) throws Exception {
         final int MAX = 43;
         boolean verifier = true;
@@ -104,6 +136,12 @@ public class TimeSheet {
         }
         return verifier;
     }
+
+    /**
+     * Méthode qui permet de s'assurer si l'employé n'a pas depassé le nombre de minute max 
+     * en teletravail 
+     * Elle retourne un boolean 
+     */
 
     public static boolean verifierLeNombreHeuresTeleTravailMax(JSONObject employe) throws Exception {
         final int MAX = 10;
@@ -116,6 +154,12 @@ public class TimeSheet {
         }
         return verifier;
     }
+
+    /**
+     * Méthode qui permet de determiner si l'employé normal a travaillé le nombre d'heur minimal qu'il doit faire 
+     * en bureau, par jour 
+     * Elle retourne un boolean 
+     */
 
     public static boolean verifierLeNombreHeuresMinmalParJourNorm(JSONObject employe) throws Exception {
         int sommeMinQuo = 0;
@@ -141,6 +185,12 @@ public class TimeSheet {
         return verifier;
     }
 
+    /**
+     * Méthode qui permet de determiner si l'employé de l'administration a travaillé le nombre d'heur minimal qu'il doit 
+     * faire  en bureau, par jour 
+     * Elle retourne un boolean 
+     */
+
     public static boolean verifierLeNombreHeuresMinmalParJourAdmin(JSONObject employe) throws Exception {
         int sommeMinQuo = 0;
         final int MIN = 4;
@@ -164,6 +214,12 @@ public class TimeSheet {
         }
         return verifier;
     }
+
+    /**
+     * Méthode pour elaborer le resultat des test
+     * Elle retourne un String
+     */
+
     public static String resultatDeVerification(JSONObject employe) throws Exception {
         String lesRemarques = "";  
         String resultat = "[";
@@ -195,6 +251,11 @@ public class TimeSheet {
 
         return resultat;
     }
+    /**
+     * Ecrire les resultats dans un fichier Json
+     * 
+     */
+
 
     public static void ecrireFichierJson(JSONObject employe) throws Exception {
         String cheminDuFichier = "src/message_result.json";
